@@ -1,0 +1,90 @@
+.LoginForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-top: 8rem;
+}
+
+.LoginForm input {
+  width: 25vw;
+  padding: 0.8rem;
+  padding-left: 3rem;
+  border-radius: 0.6894rem;
+  font-size: 1.1875rem;
+  font-weight: 400;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #828282;
+  border: 0.0862rem solid #d0d0d0;
+}
+
+.login_password,
+.login_email {
+  position: relative;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.LoginForm img {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.8rem;
+}
+
+.LoginForm h2 {
+  font-size: 2.0625rem;
+  font-weight: 500;
+  line-height: 2.8125rem;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #343434;
+  margin-bottom: 1rem;
+}
+
+.LoginForm p {
+  color: #343434;
+}
+
+.login_footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.login_button {
+  color: #fff;
+  background-color: #17a2b8;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: 3.4456rem;
+  border: none;
+  line-height: 1.625rem;
+  letter-spacing: 0em;
+  text-align: center;
+  min-width: 21.5rem;
+  cursor: pointer;
+}
+
+.register_btn {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 26px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #828282;
+  min-width: 21.5rem;
+  border-radius: 3.4456rem;
+  border: none;
+  padding: 0.5rem;
+  background-color: #ffffff;
+  border: 1.38px solid #17a2b8;
+  cursor: pointer;
+  color: #17a2b8;
+}
