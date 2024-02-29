@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import Login_form from './Login_form';
 import Styles from './signup.module.css';
 import user_icon from '../../Assets/Icons/Profile.svg';
 import email_icon from '../../Assets/Icons/mail.svg';
 import password_icon from '../../Assets/Icons/lock.svg';
-import axios from 'axios';
 
 const Signup_form = () => {
   const [active, setActive] = useState('signup');
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [error, setError] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
   const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    setError(password !== e.target.value ? 'password doesn’t match' : '');
+    const { value } = e.target;
+    setFormData({ ...formData, confirmPassword: value });
+    setError(formData.password !== value ? 'Password doesn’t match' : '');
   };
 
   const handleFormSwitch = () => {
@@ -29,33 +34,39 @@ const Signup_form = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email && emailRegex.test(email)) {
+    if (!emailRegex.test(formData.email)) {
       return setError('Invalid email format');
     }
-    if (!password && passwordRegex.test(password)) {
+
+    if (!passwordRegex.test(formData.password)) {
       return setError(
         'Password must be 8+ characters, a mix of letters, numbers, and uppercase/lowercase'
       );
     }
-    if (password !== confirmPassword) {
+
+    if (formData.password !== formData.confirmPassword) {
       setError('Password doesn’t match');
       return;
     }
 
-    const registerData = { name, email, password, confirmPassword };
     try {
       const response = await axios.post(
         `http://localhost:8080/api/v1/users/register`,
-        registerData,
-        {
-          method: 'post',
-          headers: 'content-type : application/json',
-        }
+        formData
       );
-      const data = await response.json();
-      console.log(data);
+
+      toast.success(`Registered Successfully! Welcome ${formData.name}`, {
+        duration: 4000,
+        position: 'top-right',
+      });
+
+      return <Navigate to='/dashboard' replace />;
     } catch (error) {
-      console.log('Signup Error :', error);
+      toast.error('Registration Failed', {
+        duration: 4000,
+        position: 'top-right',
+      });
+      console.error('Signup Error:', error);
     }
   };
 
@@ -66,11 +77,7 @@ const Signup_form = () => {
           <div>
             <h2>Register</h2>
           </div>
-          <form
-            action='http:localhost:8080/api/v1/users/register'
-            method='post'
-            onSubmit={handleSubmit}
-          >
+          <form onSubmit={handleSubmit}>
             <div className={Styles.signup}>
               <div className={Styles.signup_name}>
                 <img src={user_icon} alt='user_profile' />
@@ -79,7 +86,9 @@ const Signup_form = () => {
                   placeholder='Name'
                   name='name'
                   id='name'
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
               </div>
               <div className={Styles.signup_email}>
@@ -90,7 +99,9 @@ const Signup_form = () => {
                   id='email'
                   name='email'
                   required
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
               <div className={Styles.signup_password}>
@@ -100,7 +111,9 @@ const Signup_form = () => {
                   name='password'
                   id='password'
                   placeholder='Password'
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
               </div>
               <div className={Styles.signup_confpassword}>
@@ -137,4 +150,5 @@ const Signup_form = () => {
     </>
   );
 };
+
 export default Signup_form;
