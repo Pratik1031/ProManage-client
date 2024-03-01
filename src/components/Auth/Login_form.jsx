@@ -59,7 +59,7 @@ const Login_form = () => {
     <>
       {active === 'login' && (
         <div className={Styles.LoginForm}>
-          <form onSubmit={handleSubmit}>
+          <form action='/login' method='post' onSubmit={handleSubmit}>
             <div>
               <h2>Login</h2>
             </div>

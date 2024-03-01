@@ -77,7 +77,11 @@ const Signup_form = () => {
           <div>
             <h2>Register</h2>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form
+            action='http://localhost:8080/api/v1/users/register'
+            method='post'
+            onSubmit={handleSubmit}
+          >
             <div className={Styles.signup}>
               <div className={Styles.signup_name}>
                 <img src={user_icon} alt='user_profile' />

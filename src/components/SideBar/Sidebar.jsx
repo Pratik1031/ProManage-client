@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import toast from 'react-hot-toast';
+import axios from 'axios';
 import Style from './sidebar.module.css';
 import logo from '../../Assets/Icons/Logo.svg';
 import Logout from '../../Assets/Icons/Logout.svg';
@@ -17,6 +18,21 @@ const Sidebar = () => {
     setActiveButton(page);
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post('http://localhost:8080/api/v1/users/logout');
+      toast.success(`Logout Successfully ${res.data.message}`, {
+        duration: 4000,
+        position: 'top-right',
+      });
+    } catch (error) {
+      toast.error('Logout Failed', {
+        duration: 4000,
+        position: 'top-right',
+      });
+    }
+  };
+
   return (
     <div className={Style.sidebar_container}>
       <div className={Style.top_side}>
@@ -29,7 +45,7 @@ const Sidebar = () => {
               <button
                 onClick={() => handleButtonClick('dashboard')}
                 className={
-                  activeButton == 'dashboard'
+                  activeButton === 'dashboard'
                     ? Style.active_button
                     : Style.inactive_button
                 }
@@ -42,7 +58,7 @@ const Sidebar = () => {
               <button
                 onClick={() => handleButtonClick('analytics')}
                 className={
-                  activeButton == 'analytics'
+                  activeButton === 'analytics'
                     ? Style.active_button
                     : Style.inactive_button
                 }
@@ -59,7 +75,7 @@ const Sidebar = () => {
               <button
                 onClick={() => handleButtonClick('settings')}
                 className={
-                  activeButton == 'settings'
+                  activeButton === 'settings'
                     ? Style.active_button
                     : Style.inactive_button
                 }
@@ -76,7 +92,7 @@ const Sidebar = () => {
         </div>
       </div>
       <div className={Style.side_bar_logout}>
-        <button>
+        <button onClick={handleLogout}>
           <img src={Logout} alt='logout' />
           <h4>Logout</h4>
         </button>
