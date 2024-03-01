@@ -4,7 +4,10 @@
   align-items: center;
   width: 15vw;
   border-right: 1px solid #edf5fe;
-  position: relative;
+  position: sticky;
+  left: 0;
+  background-color: #fff;
+  z-index: 999;
 }
 
 .top_side {

@@ -1,0 +1,64 @@
+.header_container {
+  width: calc(100vw - 15vw);
+  height: 8rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  position: sticky;
+  background-color: #fff;
+  top: 0;
+  z-index: 200;
+}
+
+.top_section,
+.heading_section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Welcome,
+.heading,
+.date,
+.date_selection {
+  font-family: Poppins;
+}
+
+.Welcome {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 2.0625rem;
+  text-align: left;
+  color: #000000;
+}
+
+.heading {
+  font-size: 1.8125rem;
+  font-weight: 500;
+  line-height: 2.75rem;
+  text-align: left;
+}
+
+.date {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.875rem;
+  color: #707070;
+  margin-top: 1rem;
+}
+
+.date_selection {
+  width: 6rem;
+  height: 1.5rem;
+  margin-top: 1rem;
+  border: none;
+  outline: none;
+}
+
+.date_selection option {
+  font-size: 1rem;
+  padding: 0.25rem;
+  font-weight: 300;
+  line-height: 1.3125rem;
+  min-height: 1.875rem;
+  color: #000000;
+}

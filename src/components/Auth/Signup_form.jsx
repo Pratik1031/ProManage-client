@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 import Login_form from './Login_form';
 import Styles from './signup.module.css';
 import user_icon from '../../Assets/Icons/Profile.svg';
 import email_icon from '../../Assets/Icons/mail.svg';
 import password_icon from '../../Assets/Icons/lock.svg';
+import { useRegister } from '../../hooks/useRegister';
 
 const Signup_form = () => {
   const [active, setActive] = useState('signup');
@@ -16,15 +14,11 @@ const Signup_form = () => {
     password: '',
     confirmPassword: '',
   });
-  const [error, setError] = useState('');
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const { signup, error, isLoading } = useRegister();
 
   const handleConfirmPasswordChange = (e) => {
     const { value } = e.target;
     setFormData({ ...formData, confirmPassword: value });
-    setError(formData.password !== value ? 'Password doesn’t match' : '');
   };
 
   const handleFormSwitch = () => {
@@ -33,41 +27,12 @@ const Signup_form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!emailRegex.test(formData.email)) {
-      return setError('Invalid email format');
-    }
-
-    if (!passwordRegex.test(formData.password)) {
-      return setError(
-        'Password must be 8+ characters, a mix of letters, numbers, and uppercase/lowercase'
-      );
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Password doesn’t match');
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/users/register`,
-        formData
-      );
-
-      toast.success(`Registered Successfully! Welcome ${formData.name}`, {
-        duration: 4000,
-        position: 'top-right',
-      });
-
-      return <Navigate to='/dashboard' replace />;
-    } catch (error) {
-      toast.error('Registration Failed', {
-        duration: 4000,
-        position: 'top-right',
-      });
-      console.error('Signup Error:', error);
-    }
+    await signup(
+      formData.name,
+      formData.email,
+      formData.password,
+      formData.confirmPassword
+    );
   };
 
   return (
@@ -77,11 +42,7 @@ const Signup_form = () => {
           <div>
             <h2>Register</h2>
           </div>
-          <form
-            action='http://localhost:8080/api/v1/users/register'
-            method='post'
-            onSubmit={handleSubmit}
-          >
+          <form onSubmit={handleSubmit}>
             <div className={Styles.signup}>
               <div className={Styles.signup_name}>
                 <img src={user_icon} alt='user_profile' />
@@ -90,6 +51,7 @@ const Signup_form = () => {
                   placeholder='Name'
                   name='name'
                   id='name'
+                  value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
@@ -103,6 +65,7 @@ const Signup_form = () => {
                   id='email'
                   name='email'
                   required
+                  value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
@@ -115,6 +78,7 @@ const Signup_form = () => {
                   name='password'
                   id='password'
                   placeholder='Password'
+                  value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
@@ -124,18 +88,20 @@ const Signup_form = () => {
                 <img src={password_icon} alt='icon' />
                 <input
                   type='password'
-                  name='confpassword'
-                  id='confpassword'
+                  name='confirmPassword'
+                  id='confirmPassword'
                   placeholder='Confirm Password'
+                  value={formData.confirmPassword}
                   onChange={handleConfirmPasswordChange}
                   autoComplete='new-password'
                 />
               </div>
-              <div className={error && Styles.error}>
-                <span>{error}</span>
-              </div>
               <div className={Styles.signup_footer}>
-                <button type='submit' className={Styles.register_btn}>
+                <button
+                  disabled={isLoading}
+                  type='submit'
+                  className={Styles.register_btn}
+                >
                   Register
                 </button>
                 <p>Have an account ?</p>
@@ -146,6 +112,7 @@ const Signup_form = () => {
                   Login
                 </button>
               </div>
+              {error && <div className={Styles.error}>{error}</div>}
             </div>
           </form>
         </div>

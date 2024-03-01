@@ -11,7 +11,9 @@ const Main = () => {
       <Sidebar />
       <div className={Styles.sub_container}>
         <Header />
-        <Board />
+        <div className={Styles.boards}>
+          <Board />
+        </div>
       </div>
     </div>
   );
