@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import axios from 'axios';
 import Style from './sidebar.module.css';
 import logo from '../../Assets/Icons/Logo.svg';
 import Logout from '../../Assets/Icons/Logout.svg';
 import setting_icon from '../../Assets/Icons/settings.svg';
 import Board_icon from '../../Assets/Icons/layout.svg';
 import analytics_icon from '../../Assets/Icons/database.svg';
+import { useLogout } from '../../hooks/useLogout';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState(null);
+  const { logout } = useLogout();
 
   const handleButtonClick = (page) => {
     navigate(`/${page}`);
@@ -19,18 +19,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      const res = await axios.post('http://localhost:8080/api/v1/users/logout');
-      toast.success(`Logout Successfully ${res.data.message}`, {
-        duration: 4000,
-        position: 'top-right',
-      });
-    } catch (error) {
-      toast.error('Logout Failed', {
-        duration: 4000,
-        position: 'top-right',
-      });
-    }
+    logout();
   };
 
   return (

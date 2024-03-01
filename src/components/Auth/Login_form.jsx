@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import Styles from './login_form.module.css';
 import Mail from '../../Assets/Icons/mail.svg';
 import Lock from '../../Assets/Icons/lock.svg';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { Navigate } from 'react-router-dom';
 import Signup_form from './Signup_form';
+import { useLogin } from '../../hooks/useLogin';
 
 const Login_form = () => {
   const [active, setActive] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+  const { login, error, isLoading } = useLogin();
 
   const handleFormSwitch = () => {
     setActive(active === 'login' ? 'signup' : 'login');
@@ -22,37 +17,8 @@ const Login_form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email || !emailRegex.test(email)) {
-      return setError('Invalid email format');
-    }
-    if (!password || passwordRegex.test(password)) {
-      return setError(
-        'Password must be 8+ characters, a mix of letters, numbers, and uppercase/lowercase'
-      );
-    }
-
     const userData = { email, password };
-
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/users/login`,
-        userData
-      );
-
-      toast.success('Log In Successfully', {
-        duration: 4000,
-        position: 'top-right',
-      });
-
-      return <Navigate to='/dashboard' replace='true' />;
-    } catch (error) {
-      toast.error('Failed To Login', {
-        duration: 4000,
-        position: 'top-right',
-      });
-      console.log('Login Error:', error);
-    }
+    await login(userData.email, userData.password);
   };
 
   return (
@@ -89,7 +55,11 @@ const Login_form = () => {
             </div>
             <div className={error && Styles.error}>{error}</div>
             <div className={Styles.login_footer}>
-              <button type='submit' className={Styles.login_button}>
+              <button
+                type='submit'
+                disabled={isLoading}
+                className={Styles.login_button}
+              >
                 Login
               </button>
               <p>Don't have an account yet?</p>
@@ -100,6 +70,7 @@ const Login_form = () => {
                 Register
               </button>
             </div>
+            {error && <div className={Styles.error}>{error}</div>}
           </form>
         </div>
       )}
