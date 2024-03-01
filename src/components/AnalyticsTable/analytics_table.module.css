@@ -1,0 +1,28 @@
+.tableData {
+  display: flex;
+  gap: 3rem;
+}
+
+.boards {
+  width: 22rem;
+  display: flex;
+  margin-top: 2rem;
+  margin-left: 1rem;
+  flex-direction: column;
+  background-color: #f9fcff;
+  padding: 2rem;
+  border-radius: 0.625rem;
+  line-height: normal;
+}
+
+li {
+  list-style: disc;
+}
+
+li::marker {
+  color: #90c4cc;
+}
+
+td {
+  padding: 0.625rem;
+}

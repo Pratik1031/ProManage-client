@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Styles from './changePassword.module.css';
@@ -19,6 +19,22 @@ const ChangePassword = () => {
         ? 'Passwords  matched please change '
         : ''
     );
+  };
+
+  useEffect(() => {
+    getPrefillData();
+  }, []);
+
+  const getPrefillData = async () => {
+    try {
+      const res = await axios.get(
+        'http://localhost:8080/api/v1/users/prefilled'
+      );
+      const { name } = res.data;
+      setName(name);
+    } catch (error) {
+      console.log('Prefilled Data Error:', error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -58,6 +74,8 @@ const ChangePassword = () => {
             <img src={user_icon} alt='icon' />
             <input
               type='text'
+              value={name}
+              readOnly
               placeholder='Name'
               onChange={(e) => setName(e.target.value)}
             />
