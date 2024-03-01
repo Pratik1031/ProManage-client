@@ -7,10 +7,12 @@ import setting_icon from '../../Assets/Icons/settings.svg';
 import Board_icon from '../../Assets/Icons/layout.svg';
 import analytics_icon from '../../Assets/Icons/database.svg';
 import { useLogout } from '../../hooks/useLogout';
+import LogoutModal from '../Modals/LogoutModal';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const { logout } = useLogout();
 
   const handleButtonClick = (page) => {
@@ -18,8 +20,17 @@ const Sidebar = () => {
     setActiveButton(page);
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setShowModal(true);
+  };
+
+  const handleConfirmLogout = async () => {
     logout();
+    setShowModal(false);
+  };
+
+  const handleCancelLogout = () => {
+    setShowModal(false);
   };
 
   return (
@@ -86,6 +97,12 @@ const Sidebar = () => {
           <h4>Logout</h4>
         </button>
       </div>
+
+      <LogoutModal
+        show={showModal}
+        onConfirm={handleConfirmLogout}
+        onCancel={handleCancelLogout}
+      />
     </div>
   );
 };

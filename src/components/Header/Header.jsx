@@ -1,14 +1,16 @@
 import React from 'react';
 import moment from 'moment';
 import styles from './header.module.css';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 const Header = () => {
   const formattedDate = moment().format(' Do MMM, YYYY');
-
+  const { data } = useAuthContext() || {};
+  const userName = data && data.user && data.user.name;
   return (
     <div className={styles.header_container}>
       <div className={styles.top_section}>
-        <div className={styles.Welcome}>Welcome </div>
+        <div className={styles.Welcome}>Welcome {userName} </div>
         <div className={styles.date}>{formattedDate} </div>
       </div>
       <div className={styles.heading_section}>
