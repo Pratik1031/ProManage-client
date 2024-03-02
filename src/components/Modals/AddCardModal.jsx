@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import Styles from './addCardModal.module.css'; // Assuming Styles and delete_icon are properly defined
-import delete_icon from '../../Assets/Icons/Delete.svg'; // Unused import
-
+import Styles from './addCardModal.module.css';
+import delete_icon from '../../Assets/Icons/Delete.svg';
 const AddCardModal = ({ onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('');
-  const [checklists, setChecklists] = useState([{ name: '', checked: false }]);
+  const [checklists, setChecklists] = useState([]);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -51,6 +50,7 @@ const AddCardModal = ({ onClose, onSubmit }) => {
       checklists,
     };
     onSubmit(formData);
+    onClose();
   };
 
   return (
@@ -80,8 +80,8 @@ const AddCardModal = ({ onClose, onSubmit }) => {
               <input
                 type='radio'
                 id='high'
-                value='high'
-                checked={priority === 'high'}
+                value='High'
+                checked={priority === 'High'}
                 onChange={handlePriorityChange}
               />
               <label htmlFor='high'>HIGH PRIORITY</label>
@@ -91,8 +91,8 @@ const AddCardModal = ({ onClose, onSubmit }) => {
               <input
                 type='radio'
                 id='medium'
-                value='medium'
-                checked={priority === 'medium'}
+                value='Medium'
+                checked={priority === 'Medium'}
                 onChange={handlePriorityChange}
               />
               <label htmlFor='medium'>MODERATE PRIORITY</label>
@@ -102,8 +102,8 @@ const AddCardModal = ({ onClose, onSubmit }) => {
               <input
                 type='radio'
                 id='low'
-                value='low'
-                checked={priority === 'low'}
+                value='Low'
+                checked={priority === 'Low'}
                 onChange={handlePriorityChange}
               />
               <label htmlFor='low'>LOW PRIORITY</label>

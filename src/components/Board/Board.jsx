@@ -4,23 +4,36 @@ import collapse_icon from '../../Assets/Icons/codicon_collapse-all.svg';
 import add_icon from '../../Assets/Icons/add.svg';
 import AddCardModal from '../Modals/AddCardModal';
 import axios from 'axios';
+import { useLogin } from '../../hooks/useLogin';
+
 const Board = () => {
   const [showModal, setShowModal] = useState(false);
+  const { isLoading, error, login } = useLogin();
 
   const handleOpenModal = () => {
-    setShowModal(true);
+    if ((!isLoading && !error) || login) {
+      setShowModal(true);
+    } else {
+      console.log('Please log in to add a card.');
+    }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  const handleSubmitModal = async (e) => {
-    e.preventDefault();
-    const response = await axios.post(
-      'http://localhost:8080/api/v1/task/create'
-    );
-    setShowModal(false);
+  const handleSubmitModal = async (formData) => {
+    try {
+      console.log('Form data:', formData);
+      const response = await axios.post(
+        'http://localhost:8080/api/v1/task/create',
+        formData
+      );
+      setShowModal(false);
+      console.log('Task created successfully:', response.data);
+    } catch (error) {
+      console.error('Error creating task:', error);
+    }
   };
 
   return (
@@ -36,7 +49,6 @@ const Board = () => {
             />
           </div>
         </div>
-        <div className={styles.cards}>card</div>
       </div>
 
       <div className={styles.board_container}>
@@ -56,8 +68,6 @@ const Board = () => {
             />
           </div>
         </div>
-        <div className={styles.cards}>card</div>
-        <div className={styles.cards}>card</div>
       </div>
 
       <div className={styles.board_container}>
@@ -71,7 +81,6 @@ const Board = () => {
             />
           </div>
         </div>
-        <div className={styles.cards}>card</div>
       </div>
 
       <div className={styles.board_container}>
@@ -85,7 +94,6 @@ const Board = () => {
             />
           </div>
         </div>
-        <div className={styles.cards}>card</div>
       </div>
       {showModal && (
         <AddCardModal onClose={handleCloseModal} onSubmit={handleSubmitModal} />
