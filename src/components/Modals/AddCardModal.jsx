@@ -5,7 +5,7 @@ import delete_icon from '../../Assets/Icons/Delete.svg'; // Unused import
 const AddCardModal = ({ onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('');
-  const [checklists, setChecklists] = useState([]);
+  const [checklists, setChecklists] = useState([{ name: '', checked: false }]);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -20,15 +20,15 @@ const AddCardModal = ({ onClose, onSubmit }) => {
   };
 
   const handleChecklistChange = (index, event) => {
-    const updatedChecklists = [...checklists];
-    updatedChecklists[index].name = event.target.value;
-    setChecklists(updatedChecklists);
+    const newChecklists = [...checklists];
+    newChecklists[index].name = event.target.value;
+    setChecklists(newChecklists);
   };
 
   const handleCheckboxChange = (index) => {
-    const updatedChecklists = [...checklists];
-    updatedChecklists[index].checked = !updatedChecklists[index].checked;
-    setChecklists(updatedChecklists);
+    const newChecklists = [...checklists];
+    newChecklists[index].checked = !newChecklists[index].checked;
+    setChecklists(newChecklists);
   };
 
   const handleDeleteChecklist = (index) => {
@@ -36,6 +36,12 @@ const AddCardModal = ({ onClose, onSubmit }) => {
     updatedChecklists.splice(index, 1);
     setChecklists(updatedChecklists);
   };
+
+  const totalChecklists = checklists.length;
+
+  const checkedChecklists = checklists.filter(
+    (checklist) => checklist.checked
+  ).length;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,22 +57,24 @@ const AddCardModal = ({ onClose, onSubmit }) => {
     <div className={Styles.bg}>
       <div className={Styles.popup}>
         <form onSubmit={handleSubmit}>
-          <label htmlFor='title' className={Styles.title}>
-            Title
-          </label>
-          <input
-            type='text'
-            id='title'
-            required
-            placeholder='Enter Task Title'
-            className={Styles.title_ipt}
-            value={title}
-            onChange={handleTitleChange}
-          />
+          <div className={Styles.title}>
+            <label htmlFor='title'>
+              Title <span style={{ color: 'red' }}>*</span>
+            </label>
+            <input
+              type='text'
+              id='title'
+              required
+              placeholder='Enter Task Title'
+              className={Styles.title_ipt}
+              value={title}
+              onChange={handleTitleChange}
+            />
+          </div>
 
           <div className={Styles.priority_radio}>
             <label htmlFor='priority' className={Styles.select} required>
-              Select Priority
+              Select Priority<span style={{ color: 'red' }}>*</span>
             </label>
             <div className={Styles.Priority}>
               <input
@@ -79,7 +87,7 @@ const AddCardModal = ({ onClose, onSubmit }) => {
               <label htmlFor='high'>HIGH PRIORITY</label>
             </div>
 
-            <div className={Styles.Priority}>
+            <div className={Styles.moderate_priority}>
               <input
                 type='radio'
                 id='medium'
@@ -103,13 +111,15 @@ const AddCardModal = ({ onClose, onSubmit }) => {
           </div>
 
           <div className={Styles.check_head}>
-            Checklist ({checklists.length}/0)
+            Checklist ({checkedChecklists}/{totalChecklists})
+            <span style={{ color: 'red' }}>*</span>
           </div>
           <div className={Styles.check_container}>
             {checklists.map((checklist, index) => (
               <div key={index} className={Styles.checklist}>
                 <div className={Styles.input}>
                   <input
+                    className={Styles.checked_input}
                     type='checkbox'
                     checked={checklist.checked}
                     onChange={() => handleCheckboxChange(index)}
@@ -120,15 +130,16 @@ const AddCardModal = ({ onClose, onSubmit }) => {
                     onChange={(event) => handleChecklistChange(index, event)}
                     placeholder='Enter checklist item'
                   />
-                </div>
-                <div>
-                  <button
-                    type='button'
-                    className={Styles.delete_icon}
-                    onClick={() => handleDeleteChecklist(index)}
-                  >
-                    <img src={delete_icon} alt='delete' />
-                  </button>
+                  <div>
+                    <div className={Styles.image}>
+                      <img
+                        className={Styles.delete_icon}
+                        src={delete_icon}
+                        alt='delete'
+                        onClick={() => handleDeleteChecklist(index)}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -142,17 +153,23 @@ const AddCardModal = ({ onClose, onSubmit }) => {
           </div>
 
           <div className={Styles.bottom}>
-            <input type='date' className={Styles.date} />
-            <button
-              type='button'
-              className={Styles.cancelBtn}
-              onClick={onClose}
-            >
-              Cancel
-            </button>
-            <button type='submit' className={Styles.saveBtn} onClick={onSubmit}>
-              Save
-            </button>
+            <input type='date' className={Styles.date} placeholder='Due Date' />
+            <div className={Styles.submit_btns}>
+              <button
+                type='button'
+                className={Styles.cancelBtn}
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                type='submit'
+                className={Styles.saveBtn}
+                onClick={onSubmit}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </form>
       </div>
